@@ -31,9 +31,6 @@ public class OrderAppService {
 
   public record OrderRequestItem(long productId, int qty) {}
 
-  /**
-   * Public entrypoint — idempotent + transactional
-   */
   @Transactional
   public long placeOrder(String idempotencyKey, long buyerId, List<OrderRequestItem> items) {
 

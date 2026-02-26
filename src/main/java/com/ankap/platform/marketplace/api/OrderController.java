@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -26,22 +29,30 @@ public class OrderController {
       @Positive int qty
   ) {}
 
+  // buyerId REMOVED — identity comes ONLY from JWT subject
   public record PlaceOrderRequest(
-      @Positive long buyerId,
       @NotEmpty List<@Valid OrderItemRequest> items
   ) {}
 
   public record PlaceOrderResponse(long orderId) {}
 
+  @PreAuthorize("hasRole('BUYER')")
   @PostMapping
   public ResponseEntity<PlaceOrderResponse> place(
+          @AuthenticationPrincipal Jwt jwt,
           @RequestHeader("Idempotency-Key") String idempotencyKey,
-          @RequestBody @Valid PlaceOrderRequest req) {
+          @RequestBody @Valid PlaceOrderRequest req
+  ) {
+    long buyerId = Long.parseLong(jwt.getSubject());
+
     long id = orderAppService.placeOrder(
             idempotencyKey,
-        req.buyerId(),
-        req.items().stream().map(i -> new OrderAppService.OrderRequestItem(i.productId(), i.qty())).toList()
+            buyerId,
+            req.items().stream()
+                    .map(i -> new OrderAppService.OrderRequestItem(i.productId(), i.qty()))
+                    .toList()
     );
+
     return ResponseEntity.ok(new PlaceOrderResponse(id));
   }
 }

@@ -1,4 +1,3 @@
-// src/main/java/com/ankap/platform/marketplace/app/OutboxPoller.java
 package com.ankap.platform.marketplace.app;
 
 import com.ankap.platform.marketplace.domain.OutboxEvent;

@@ -1,5 +1,6 @@
 package com.ankap.platform.marketplace.api;
 
+import com.ankap.platform.marketplace.domain.OutOfStockException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,14 @@ public class GlobalExceptionHandler {
                                         jakarta.servlet.http.HttpServletRequest req) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(
         new ErrorResponse("CONFLICT", ex.getMessage(), req.getRequestURI(), Instant.now())
+    );
+  }
+
+  @ExceptionHandler(OutOfStockException.class)
+  ResponseEntity<ErrorResponse> outOfStock(OutOfStockException ex,
+                                          jakarta.servlet.http.HttpServletRequest req) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(
+        new ErrorResponse("OUT_OF_STOCK", ex.getMessage(), req.getRequestURI(), Instant.now())
     );
   }
 

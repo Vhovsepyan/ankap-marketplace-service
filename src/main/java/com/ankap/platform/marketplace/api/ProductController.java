@@ -1,10 +1,14 @@
 package com.ankap.platform.marketplace.api;
 
 import com.ankap.platform.marketplace.app.ProductAppService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @RestController
 @RequestMapping("/api/products")
@@ -17,8 +21,8 @@ public class ProductController {
     this.productAppService = productAppService;
   }
 
+  // sellerId REMOVED — identity comes ONLY from JWT subject
   public record CreateProductRequest(
-      @Positive long sellerId,
       @NotBlank @Size(max = 300) String name,
       @Positive long priceCents,
       @Min(0) int initialQty
@@ -26,9 +30,14 @@ public class ProductController {
 
   public record CreateProductResponse(long productId) {}
 
+  @PreAuthorize("hasRole('SELLER')")
   @PostMapping
-  public ResponseEntity<CreateProductResponse> create(@RequestBody @Validated CreateProductRequest req) {
-    long id = productAppService.createProduct(req.sellerId(), req.name(), req.priceCents(), req.initialQty());
+  public ResponseEntity<CreateProductResponse> create(
+          @AuthenticationPrincipal Jwt jwt,
+          @RequestBody @Valid CreateProductRequest req
+  ) {
+    long sellerId = Long.parseLong(jwt.getSubject());
+    long id = productAppService.createProduct(sellerId, req.name(), req.priceCents(), req.initialQty());
     return ResponseEntity.ok(new CreateProductResponse(id));
   }
 }
