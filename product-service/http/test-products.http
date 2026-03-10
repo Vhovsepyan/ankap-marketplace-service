@@ -1,0 +1,27 @@
+### 1. Login to get your token (Copy the token from the response)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@ankap.com",
+  "password": "mysecretpassword"
+}
+
+### 2. Create a Product (Replace YOUR_TOKEN_HERE with the copied token)
+POST http://localhost:8080/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTYxNTg0LCJleHAiOjE3NzMxNjI0ODR9.zg4Pj5GnF0z-wC6jQrB9YwV5JzUoRcFYa5pixD2k0V8
+Content-Type: application/json
+
+{
+  "name": "Mechanical Keyboard",
+  "description": "Blue switches, RGB",
+  "price": 129.99,
+  "stockQuantity": 50
+}
+
+### 3. Verify Public Access (This should work WITHOUT a token)
+GET http://localhost:8080/api/products
+
+
+### Test Order Service Routing
+GET http://localhost:8080/api/orders/test

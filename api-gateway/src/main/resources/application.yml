@@ -1,5 +1,5 @@
 server:
-  port: 8080 # The Gateway is the main entry point for all clients
+  port: 8080
 
 spring:
   application:
@@ -7,19 +7,17 @@ spring:
   cloud:
     gateway:
       routes:
-        # Route 1: Auth Service (We will build this next on port 8081)
         - id: auth-service
           uri: http://localhost:8081
           predicates:
             - Path=/api/auth/**
 
-        # Route 2: Product Service (We will build this on port 8082)
         - id: product-service
           uri: http://localhost:8082
           predicates:
             - Path=/api/products/**
 
-        # Route 3: Order Service (We will build this on port 8083)
+        # NEW: Route for the Order Service
         - id: order-service
           uri: http://localhost:8083
           predicates:

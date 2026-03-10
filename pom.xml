@@ -36,5 +36,6 @@
 
 	<modules>
 		<module>api-gateway</module>
-	</modules>
+        <module>product-service</module>
+    </modules>
 </project>
