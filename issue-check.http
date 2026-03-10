@@ -1,0 +1,9 @@
+### Test Order Service Directly
+POST http://localhost:8083/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTY0MDQ3LCJleHAiOjE3NzMxNjQ5NDd9.rP1_tznLMFxakPkIEHXjj2Hf_e5RsB0FM4gq9GX_RgQ
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
