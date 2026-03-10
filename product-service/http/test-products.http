@@ -28,7 +28,7 @@ GET http://localhost:8080/api/orders/test
 
 ### 3. Place the Order (Replace YOUR_TOKEN_HERE and ensure productId exists)
 POST http://localhost:8080/api/orders
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTY0ODQ1LCJleHAiOjE3NzMxNjU3NDV9.W5wv0I2gNshQrR3GeBrLCrEkBUCWxCYc04gqWsIszlU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTY3NTI1LCJleHAiOjE3NzMxNjg0MjV9.xIV2bMHksbDdREyvI1kdYQV_Q1oSCWXsqyovnG7vRno
 Content-Type: application/json
 
 {
