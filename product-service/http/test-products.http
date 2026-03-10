@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### 2. Create a Product (Replace YOUR_TOKEN_HERE with the copied token)
 POST http://localhost:8080/api/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTYxNTg0LCJleHAiOjE3NzMxNjI0ODR9.zg4Pj5GnF0z-wC6jQrB9YwV5JzUoRcFYa5pixD2k0V8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTY5MzcyLCJleHAiOjE3NzMxNzAyNzJ9.l4LgmO44Je3Uas69Qt2hnqf8Z_Zk4_kTmZEBNDtkc-k
 Content-Type: application/json
 
 {
@@ -28,10 +28,14 @@ GET http://localhost:8080/api/orders/test
 
 ### 3. Place the Order (Replace YOUR_TOKEN_HERE and ensure productId exists)
 POST http://localhost:8080/api/orders
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTY3NTI1LCJleHAiOjE3NzMxNjg0MjV9.xIV2bMHksbDdREyvI1kdYQV_Q1oSCWXsqyovnG7vRno
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTcwNjgyLCJleHAiOjE3NzMxNzE1ODJ9.70dINPEDlhkh-bVvbgfeHCV8inSNW8fyni6Ngvf0OUg
 Content-Type: application/json
 
 {
   "productId": 1,
   "quantity": 2
 }
+
+### Get Live Analytics
+GET http://localhost:8080/api/analytics
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhbmthcC1tYXJrZXRwbGFjZSIsInN1YiI6InRlc3RAYW5rYXAuY29tIiwicm9sZXMiOlsiQlVZRVIiXSwiaWF0IjoxNzczMTcwNjgyLCJleHAiOjE3NzMxNzE1ODJ9.70dINPEDlhkh-bVvbgfeHCV8inSNW8fyni6Ngvf0OUg
