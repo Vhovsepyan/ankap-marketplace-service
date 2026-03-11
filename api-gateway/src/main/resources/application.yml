@@ -4,13 +4,6 @@ server:
 spring:
   application:
     name: api-gateway
-  management:
-    tracing:
-      sampling:
-        probability: 1.0
-    zipkin:
-      tracing:
-        endpoint: http://localhost:9411/api/v2/spans
   cloud:
     gateway:
       routes:
@@ -32,4 +25,20 @@ spring:
         - id: analytics-service
           uri: http://localhost:8084
           predicates:
-          - Path=/api/analytics/**
+            - Path=/api/analytics/**
+
+# 🌟 Notice how management is completely outside of 'spring' now!
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

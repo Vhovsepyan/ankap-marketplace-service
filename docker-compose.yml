@@ -49,6 +49,26 @@ services:
     ports:
       - "9411:9411"
     restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ankap-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ankap-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 # We only need the postgres volume now
 volumes:
   postgres_data:

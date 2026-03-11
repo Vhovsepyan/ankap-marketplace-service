@@ -27,9 +27,8 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Anyone can view products
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                        // Must be authenticated to create/update/delete products
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth
