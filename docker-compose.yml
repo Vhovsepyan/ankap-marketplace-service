@@ -43,7 +43,12 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     restart: unless-stopped
     # Notice: No volumes mapped here to prevent Windows permission crashing!
-
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: ankap-zipkin
+    ports:
+      - "9411:9411"
+    restart: unless-stopped
 # We only need the postgres volume now
 volumes:
   postgres_data:
