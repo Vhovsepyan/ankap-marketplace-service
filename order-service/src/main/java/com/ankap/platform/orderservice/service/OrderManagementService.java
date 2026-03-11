@@ -19,7 +19,7 @@ public class OrderManagementService {
 
     private final OrderRepository orderRepository;
     private final ProductClient productClient;
-    private final KafkaTemplate<String, Object> kafkaTemplate; // <-- NEW
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public OrderManagementService(OrderRepository orderRepository, ProductClient productClient, KafkaTemplate<String, Object> kafkaTemplate) {
         this.orderRepository = orderRepository;
@@ -30,12 +30,7 @@ public class OrderManagementService {
     @Transactional
     public Order placeOrder(OrderRequest request, String buyerEmail) {
 
-        ProductDto product;
-        try {
-            product = productClient.getProductById(request.productId());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-        }
+        ProductDto product = productClient.getProductById(request.productId());
 
         if (product.stockQuantity() < request.quantity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock");
