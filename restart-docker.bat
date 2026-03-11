@@ -7,7 +7,7 @@ docker compose down
 
 echo.
 echo 🚀 Starting containers in the background...
-docker compose up -d
+docker compose up -d --build
 
 echo.
 echo 📋 Current container status:

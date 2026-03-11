@@ -1,4 +1,92 @@
 services:
+  # --- SPRING BOOT MICROSERVICES ---
+  analytics-service:
+    build: ./analytics-service
+    container_name: ankap-analytics-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SERVER_PORT=8084
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - kafka
+      - zipkin
+    restart: unless-stopped
+
+  auth-service:
+    build: ./auth-service
+    container_name: ankap-auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/auth_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - postgres
+      - zipkin
+    restart: unless-stopped
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: ankap-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      - PRODUCT_SERVICE_URL=http://product-service:8082
+      - ORDER_SERVICE_URL=http://order-service:8083
+      - ANALYTICS_SERVICE_URL=http://analytics-service:8084
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - zipkin
+    restart: unless-stopped
+
+  order-service:
+    build: ./order-service
+    container_name: ankap-order-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SERVER_PORT=8083
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/order_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - PRODUCT_SERVICE_URL=http://product-service:8082
+    depends_on:
+      - postgres
+      - kafka
+      - zipkin
+      - product-service
+    restart: unless-stopped
+
+  product-service:
+    build: ./product-service
+    container_name: ankap-product-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/product_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+      - zipkin
+    restart: unless-stopped
+
+  # --- INFRASTRUCTURE ---
   # 1. PostgreSQL - Relational Database
   postgres:
     image: postgres:16-alpine
@@ -31,9 +119,10 @@ services:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092'
+      # Tell Kafka to use its Docker container name instead of localhost!
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
       KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@localhost:9093'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
@@ -42,13 +131,14 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     restart: unless-stopped
-    # Notice: No volumes mapped here to prevent Windows permission crashing!
+
   zipkin:
     image: openzipkin/zipkin:latest
     container_name: ankap-zipkin
     ports:
       - "9411:9411"
     restart: unless-stopped
+
   prometheus:
     image: prom/prometheus:latest
     container_name: ankap-prometheus
@@ -69,6 +159,5 @@ services:
       - prometheus
     restart: unless-stopped
 
-# We only need the postgres volume now
 volumes:
   postgres_data:
