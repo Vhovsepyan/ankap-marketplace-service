@@ -32,7 +32,7 @@ public class OrderManagementService {
 
         ProductDto product = productClient.getProductById(request.productId());
 
-        if (product.stockQuantity() < request.quantity()) {
+        if (product.availableQuantity() < request.quantity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock");
         }
 

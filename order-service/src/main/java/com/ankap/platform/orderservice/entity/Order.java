@@ -3,17 +3,18 @@ package com.ankap.platform.orderservice.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
 public class Order {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
   @Column(name = "product_id", nullable = false)
-  private Long productId;
+  private UUID productId;
 
   @Column(name = "buyer_email", nullable = false)
   private String buyerEmail;
@@ -30,11 +31,10 @@ public class Order {
   @Column(name = "created_at", updatable = false)
   private Instant createdAt = Instant.now();
 
-  // Getters and Setters
-  public Long getId() { return id; }
-  public void setId(Long id) { this.id = id; }
-  public Long getProductId() { return productId; }
-  public void setProductId(Long productId) { this.productId = productId; }
+  public UUID getId() { return id; }
+  public void setId(UUID id) { this.id = id; }
+  public UUID getProductId() { return productId; }
+  public void setProductId(UUID productId) { this.productId = productId; }
   public String getBuyerEmail() { return buyerEmail; }
   public void setBuyerEmail(String buyerEmail) { this.buyerEmail = buyerEmail; }
   public Integer getQuantity() { return quantity; }

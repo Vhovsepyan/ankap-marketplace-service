@@ -5,13 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Component
 public class ProductClientFallback implements ProductClient {
 
     @Override
-    public ProductDto getProductById(Long id) {
+    public ProductDto getProductById(UUID id) {
         throw new ResponseStatusException(
-                HttpStatus.SERVICE_UNAVAILABLE, 
+                HttpStatus.SERVICE_UNAVAILABLE,
                 "Product Catalog is temporarily unavailable. Please try again later."
         );
     }

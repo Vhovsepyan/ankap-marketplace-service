@@ -1,4 +1,6 @@
 package com.ankap.platform.orderservice.dto;
 
-public record OrderRequest(Long productId, Integer quantity) {
+import java.util.UUID;
+
+public record OrderRequest(UUID productId, Integer quantity) {
 }

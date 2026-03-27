@@ -1,4 +1,6 @@
 package com.ankap.platform.productservice.dto;
 
-public record OrderPlacedEvent(Long orderId, Long productId, Integer quantity) {
+import java.util.UUID;
+
+public record OrderPlacedEvent(UUID orderId, UUID productId, Integer quantity) {
 }
