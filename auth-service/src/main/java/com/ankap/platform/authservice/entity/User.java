@@ -23,7 +23,6 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
-    // Getters and Setters (Omitted for brevity, please generate them or use Lombok)
     
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

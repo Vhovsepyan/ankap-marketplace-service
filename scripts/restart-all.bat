@@ -18,4 +18,3 @@ docker compose up -d --build
 
 echo.
 echo Infrastructure successfully restarted!
-pause

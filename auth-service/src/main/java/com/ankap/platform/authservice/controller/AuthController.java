@@ -35,7 +35,7 @@ public class AuthController {
         User user = new User();
         user.setEmail(request.email());
         user.setPasswordHash(passwordEncoder.encode(request.password()));
-        user.setRole("BUYER"); // We'll default to BUYER for now
+        user.setRole("BUYER");
         
         userRepository.save(user);
 

@@ -31,7 +31,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .issuer(jwtIssuer)
                 .subject(email)
-                .claim("roles", List.of(role)) // Plural "roles" to match your SecurityConfig converter
+                .claim("roles", List.of(role))
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(accessTokenMinutes, ChronoUnit.MINUTES)))
                 .signWith(key)

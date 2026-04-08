@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Pulls the 32-character secret from application.properties
     @Value("${security.jwt.secret}")
     private String jwtSecret;
 
@@ -28,18 +27,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().authenticated()
                 )
-                // We don't even need to pass the decoder here,
-                // Spring Boot automatically finds the @Bean below!
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))
                 .build();
     }
 
-    // 🌟 THIS IS THE MISSING PIECE 🌟
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKey = new SecretKeySpec(
                 jwtSecret.getBytes(StandardCharsets.UTF_8),
-                "HMACSHA256" // This perfectly matches the HS256 algorithm we fixed earlier!
+                "HMACSHA256"
         );
         return NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
