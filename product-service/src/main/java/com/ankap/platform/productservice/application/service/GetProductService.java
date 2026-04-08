@@ -31,13 +31,13 @@ public class GetProductService implements GetProductUseCase {
 
     @Override
     public List<Product> getAllProducts() {
-        return repositoryPort.getAllProducts(); // Fetch from DB (cache logic for lists is complex, keep it simple)
+        return repositoryPort.getAllProducts();
     }
 
     @Override
     public Product save(Product product) {
         Product savedProduct = repositoryPort.save(product);
-        cachePort.put(savedProduct); // Update cache on save
+        cachePort.put(savedProduct);
         return savedProduct;
     }
 }

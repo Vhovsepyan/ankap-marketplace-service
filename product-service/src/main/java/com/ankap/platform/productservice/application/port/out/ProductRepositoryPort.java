@@ -10,4 +10,6 @@ public interface ProductRepositoryPort {
     Optional<Product> findById(UUID id);
     Product save(Product product);
     List<Product> getAllProducts();
+    void softDeleteById(UUID id);
+    void hardDeleteById(UUID id);
 }

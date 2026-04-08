@@ -1,6 +1,7 @@
 package com.ankap.platform.productservice.presentation;
 
 import com.ankap.platform.productservice.application.port.in.GetProductUseCase;
+import com.ankap.platform.productservice.application.port.in.product.DeleteProductUseCase;
 import com.ankap.platform.productservice.domain.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,11 @@ import java.util.UUID;
 public class ProductController {
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final GetProductUseCase getProductUseCase;
+    private final DeleteProductUseCase deleteProductUseCase;
 
-    public ProductController(GetProductUseCase getProductUseCase) {
+    public ProductController(GetProductUseCase getProductUseCase, DeleteProductUseCase deleteProductUseCase) {
         this.getProductUseCase = getProductUseCase;
+        this.deleteProductUseCase = deleteProductUseCase;
     }
 
     @GetMapping
@@ -36,5 +39,11 @@ public class ProductController {
     @PostMapping
     public Product createProduct(@RequestBody Product product, @AuthenticationPrincipal Jwt jwt) {
         return getProductUseCase.save(product);
+    }
+
+    @DeleteMapping("/{productId}")
+    public void deleteProductById(@PathVariable UUID productId) {
+        log.info("Soft deleting product {}...", productId);
+        deleteProductUseCase.softDeleteProductById(productId);
     }
 }

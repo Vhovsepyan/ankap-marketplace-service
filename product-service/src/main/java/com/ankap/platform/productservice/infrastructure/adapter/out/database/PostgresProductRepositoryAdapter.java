@@ -67,4 +67,14 @@ public class PostgresProductRepositoryAdapter implements ProductRepositoryPort {
                 ))
                 .toList();
     }
+
+    @Override
+    public void softDeleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public void hardDeleteById(UUID id) {
+        jpaRepository.hardDeleteById(id);
+    }
 }

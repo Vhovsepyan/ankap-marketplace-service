@@ -1,11 +1,16 @@
 package com.ankap.platform.productservice.infrastructure.adapter.out.database;
 
 import jakarta.persistence.*; // Make sure to import GenerationType and GeneratedValue
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name = "products")
+@SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE id = ? AND version = ?")
+@Where(clause = "is_deleted = false")
 public class ProductEntity {
 
     @Id
@@ -17,6 +22,7 @@ public class ProductEntity {
     private BigDecimal price;
     private int availableQuantity;
     private String category;
+    private Boolean isDeleted;
 
     @Version
     private Long version;
@@ -33,7 +39,6 @@ public class ProductEntity {
         this.version = version;
     }
 
-    // ... (Keep all your existing getters here)
     public UUID getId() { return id; }
     public String getSku() { return sku; }
     public String getName() { return name; }
@@ -41,4 +46,6 @@ public class ProductEntity {
     public int getAvailableQuantity() { return availableQuantity; }
     public String getCategory() { return category; }
     public Long getVersion() { return version; }
+    public Boolean getDeleted() { return isDeleted; }
+    public void setDeleted(Boolean deleted) { isDeleted = deleted; }
 }
