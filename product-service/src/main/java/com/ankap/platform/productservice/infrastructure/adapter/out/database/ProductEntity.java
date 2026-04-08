@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) // 🌟 ADD THIS LINE
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String sku;
@@ -22,7 +22,7 @@ public class ProductEntity {
     private BigDecimal price;
     private int availableQuantity;
     private String category;
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @Version
     private Long version;

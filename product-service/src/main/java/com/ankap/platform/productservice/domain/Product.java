@@ -11,7 +11,7 @@ public class Product {
     private int availableQuantity;
     private String category;
     private Long version;
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     public Product() {}
 
