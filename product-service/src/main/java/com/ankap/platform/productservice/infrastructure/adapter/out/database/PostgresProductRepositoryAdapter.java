@@ -26,7 +26,8 @@ public class PostgresProductRepositoryAdapter implements ProductRepositoryPort {
                 entity.getPrice(),
                 entity.getAvailableQuantity(),
                 entity.getCategory(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getDeleted()
         ));
     }
 
@@ -39,7 +40,8 @@ public class PostgresProductRepositoryAdapter implements ProductRepositoryPort {
                 product.getPrice(),
                 product.getAvailableQuantity(),
                 product.getCategory(),
-                product.getVersion()
+                product.getVersion(),
+                product.getDeleted()
         );
         ProductEntity saved = jpaRepository.save(entity);
         return new Product(
@@ -49,7 +51,8 @@ public class PostgresProductRepositoryAdapter implements ProductRepositoryPort {
                 saved.getPrice(),
                 saved.getAvailableQuantity(),
                 saved.getCategory(),
-                saved.getVersion()
+                saved.getVersion(),
+                saved.getDeleted()
         );
     }
 
@@ -63,7 +66,8 @@ public class PostgresProductRepositoryAdapter implements ProductRepositoryPort {
                         entity.getPrice(),
                         entity.getAvailableQuantity(),
                         entity.getCategory(),
-                        entity.getVersion()
+                        entity.getVersion(),
+                        entity.getDeleted()
                 ))
                 .toList();
     }

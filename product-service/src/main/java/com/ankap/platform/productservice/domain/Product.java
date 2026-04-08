@@ -11,10 +11,11 @@ public class Product {
     private int availableQuantity;
     private String category;
     private Long version;
+    private Boolean isDeleted;
 
     public Product() {}
 
-    public Product(UUID id, String sku, String name, BigDecimal price, int availableQuantity, String category, Long version) {
+    public Product(UUID id, String sku, String name, BigDecimal price, int availableQuantity, String category, Long version, Boolean isDeleted) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -22,6 +23,7 @@ public class Product {
         this.availableQuantity = availableQuantity;
         this.category = category;
         this.version = version;
+        this.isDeleted = isDeleted;
     }
 
     public UUID getId() { return id; }
@@ -31,6 +33,14 @@ public class Product {
     public int getAvailableQuantity() { return availableQuantity; }
     public String getCategory() { return category; }
     public Long getVersion() { return version; }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public void deductInventory(int quantity) {
         if (this.availableQuantity < quantity) {

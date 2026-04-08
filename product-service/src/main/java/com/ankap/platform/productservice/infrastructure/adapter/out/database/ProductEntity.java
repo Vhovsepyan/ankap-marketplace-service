@@ -29,7 +29,7 @@ public class ProductEntity {
 
     public ProductEntity() {}
 
-    public ProductEntity(UUID id, String sku, String name, BigDecimal price, int availableQuantity, String category, Long version) {
+    public ProductEntity(UUID id, String sku, String name, BigDecimal price, int availableQuantity, String category, Long version, Boolean isDeleted) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -37,6 +37,7 @@ public class ProductEntity {
         this.availableQuantity = availableQuantity;
         this.category = category;
         this.version = version;
+        this.isDeleted = isDeleted;
     }
 
     public UUID getId() { return id; }

@@ -5,10 +5,12 @@ services:
     container_name: ankap-analytics-service
     ports:
       - "8084:8084"
+      - "5025:5025"
     environment:
       - SERVER_PORT=8084
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5025
     depends_on:
       - kafka
       - zipkin
@@ -51,6 +53,7 @@ services:
     container_name: ankap-order-service
     ports:
       - "8083:8083"
+      - "5015:5015"
     environment:
       - SERVER_PORT=8083
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/order_db
@@ -59,6 +62,7 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
       - PRODUCT_SERVICE_URL=http://product-service:8082
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5015
     depends_on:
       - postgres
       - kafka
@@ -71,6 +75,7 @@ services:
     container_name: ankap-product-service
     ports:
       - "8082:8082"
+      - "5005:5005"
     environment:
       - SERVER_PORT=8082
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/product_db
@@ -79,6 +84,7 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
       - postgres
       - redis
