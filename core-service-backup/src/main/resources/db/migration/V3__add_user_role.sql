@@ -1,1 +1,0 @@
-alter table users add column role varchar(40) not null default 'BUYER';
