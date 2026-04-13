@@ -1,6 +1,7 @@
 package com.ankap.platform.productservice.infrastructure.cache;
 
 import com.ankap.platform.productservice.application.port.out.ProductCachePort;
+import com.ankap.platform.productservice.domain.Product;
 import com.ankap.platform.productservice.domain.event.ProductDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,19 @@ public class ProductCacheListenerService {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProductDeleted(ProductDeletedEvent event) {
-        log.info("Transaction committed successfully. Updating cache for product: {}", event.productId());
+        log.info("Transaction committed successfully. Deleting product from Cache: {}", event.productId());
         try {
             cachePort.evict(event.productId());
+        } catch (Exception e) {
+            log.error("Failed to update cache after product save", e);
+        }
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void onProductCreatedOrUpdated(Product product) {
+        log.info("Transaction committed successfully. Creating or Updating cache for product: {}", product.getId());
+        try {
+            cachePort.put(product);
         } catch (Exception e) {
             log.error("Failed to update cache after product save", e);
         }

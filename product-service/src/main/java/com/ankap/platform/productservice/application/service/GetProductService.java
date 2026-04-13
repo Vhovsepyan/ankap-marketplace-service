@@ -1,6 +1,6 @@
 package com.ankap.platform.productservice.application.service;
 
-import com.ankap.platform.productservice.application.port.in.GetProductUseCase;
+import com.ankap.platform.productservice.application.port.in.product.GetProductUseCase;
 import com.ankap.platform.productservice.application.port.out.ProductCachePort;
 import com.ankap.platform.productservice.application.port.out.ProductRepositoryPort;
 import com.ankap.platform.productservice.domain.Product;
@@ -34,10 +34,4 @@ public class GetProductService implements GetProductUseCase {
         return repositoryPort.getAllProducts();
     }
 
-    @Override
-    public Product save(Product product) {
-        Product savedProduct = repositoryPort.save(product);
-        cachePort.put(savedProduct);
-        return savedProduct;
-    }
 }

@@ -1,4 +1,4 @@
-package com.ankap.platform.productservice.application.port.in;
+package com.ankap.platform.productservice.application.port.in.product;
 
 import com.ankap.platform.productservice.domain.Product;
 
@@ -9,6 +9,4 @@ public interface GetProductUseCase {
     Product getProduct(UUID id);
 
     List<Product> getAllProducts();
-
-    Product save(Product product);
 }

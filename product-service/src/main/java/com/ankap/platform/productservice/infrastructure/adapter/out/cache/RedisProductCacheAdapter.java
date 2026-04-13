@@ -44,7 +44,7 @@ public class RedisProductCacheAdapter implements ProductCachePort {
     @Override
     public List<Product> getAllProducts() {
         Set<String> keys = redisTemplate.keys(CACHE_KEY_PREFIX + "*");
-        if (keys == null || keys.isEmpty()) {
+        if (keys.isEmpty()) {
             return Collections.emptyList();
         }
         return redisTemplate.opsForValue().multiGet(keys);
