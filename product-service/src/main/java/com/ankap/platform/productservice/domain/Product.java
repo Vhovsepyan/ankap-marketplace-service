@@ -1,5 +1,9 @@
 package com.ankap.platform.productservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -15,7 +19,15 @@ public class Product {
 
     public Product() {}
 
-    public Product(UUID id, String sku, String name, BigDecimal price, int availableQuantity, String category, Long version, Boolean isDeleted) {
+    @JsonCreator
+    public Product(@JsonProperty("id") UUID id,
+                   @JsonProperty("sku") String sku,
+                   @JsonProperty("name") String name,
+                   @JsonProperty("price") BigDecimal price,
+                   @JsonProperty("availableQuantity") int availableQuantity,
+                   @JsonProperty("category") String category,
+                   @JsonProperty("version") Long version,
+                   @JsonProperty("deleted") @JsonAlias("isDeleted") Boolean isDeleted) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -23,7 +35,7 @@ public class Product {
         this.availableQuantity = availableQuantity;
         this.category = category;
         this.version = version;
-        this.isDeleted = isDeleted;
+        this.isDeleted = isDeleted != null && isDeleted;
     }
 
     public UUID getId() { return id; }

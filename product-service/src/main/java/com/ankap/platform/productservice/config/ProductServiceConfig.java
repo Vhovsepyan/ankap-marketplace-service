@@ -34,7 +34,7 @@ public class ProductServiceConfig {
     }
 
     @Bean
-    public ReserveInventoryUseCase reserveInventoryUseCase(ProductRepositoryPort repositoryPort, ProductEventPublisherPort eventPublisherPort) {
-        return new ReserveInventoryService(repositoryPort, eventPublisherPort);
+    public ReserveInventoryUseCase reserveInventoryUseCase(ProductRepositoryPort repositoryPort, ProductEventPublisherPort eventPublisherPort, ProductCachePort cachePort) {
+        return new ReserveInventoryService(repositoryPort, eventPublisherPort, cachePort);
     }
 }

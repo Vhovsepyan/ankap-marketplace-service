@@ -1,8 +1,8 @@
 package com.ankap.platform.productservice.infrastructure.cache;
 
 import com.ankap.platform.productservice.application.port.out.ProductCachePort;
-import com.ankap.platform.productservice.domain.Product;
 import com.ankap.platform.productservice.domain.event.ProductDeletedEvent;
+import com.ankap.platform.productservice.domain.event.ProductSavedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,15 +25,15 @@ public class ProductCacheListenerService {
         try {
             cachePort.evict(event.productId());
         } catch (Exception e) {
-            log.error("Failed to update cache after product save", e);
+            log.error("Failed to evict cache after product delete", e);
         }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onProductCreatedOrUpdated(Product product) {
-        log.info("Transaction committed successfully. Creating or Updating cache for product: {}", product.getId());
+    public void onProductSaved(ProductSavedEvent event) {
+        log.info("Transaction committed successfully. Creating or Updating cache for product: {}", event.id());
         try {
-            cachePort.put(product);
+            cachePort.put(event.toProduct());
         } catch (Exception e) {
             log.error("Failed to update cache after product save", e);
         }

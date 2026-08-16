@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -44,9 +45,13 @@ public class RedisProductCacheAdapter implements ProductCachePort {
     @Override
     public List<Product> getAllProducts() {
         Set<String> keys = redisTemplate.keys(CACHE_KEY_PREFIX + "*");
-        if (keys.isEmpty()) {
+        if (keys == null || keys.isEmpty()) {
             return Collections.emptyList();
         }
-        return redisTemplate.opsForValue().multiGet(keys);
+        List<Product> products = redisTemplate.opsForValue().multiGet(keys);
+        if (products == null) {
+            return Collections.emptyList();
+        }
+        return products.stream().filter(Objects::nonNull).toList();
     }
 }
