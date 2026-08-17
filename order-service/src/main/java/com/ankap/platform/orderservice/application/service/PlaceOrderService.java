@@ -6,6 +6,7 @@ import com.ankap.platform.orderservice.application.port.out.OrderEventPublisherP
 import com.ankap.platform.orderservice.application.port.out.OrderRepositoryPort;
 import com.ankap.platform.orderservice.application.port.out.ProductCheckPort;
 import com.ankap.platform.orderservice.domain.Order;
+import com.ankap.platform.orderservice.domain.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -38,7 +39,7 @@ public class PlaceOrderService implements PlaceOrderUseCase {
                 command.buyerEmail(),
                 command.quantity(),
                 totalPrice,
-                "PENDING",
+                OrderStatus.PENDING,
                 Instant.now()
         );
 

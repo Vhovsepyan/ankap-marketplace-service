@@ -62,12 +62,16 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
       - PRODUCT_SERVICE_URL=http://product-service:8082
+      - LEDGERFLOW_URL=http://ledgerflow:8080
+      - LEDGERFLOW_MERCHANT_ID=11111111-1111-1111-1111-111111111111
+      - LEDGERFLOW_CURRENCY=USD
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5015
     depends_on:
       - postgres
       - kafka
       - zipkin
       - product-service
+      - ledgerflow
     restart: unless-stopped
 
   product-service:
@@ -91,6 +95,83 @@ services:
       - kafka
       - zipkin
     restart: unless-stopped
+
+  # --- PAYMENTS (LedgerFlow, a separate repo checked out next to this one) ---
+  # Orders are charged through LedgerFlow, which owns the money: it authorizes and
+  # captures against a provider and records every movement as double-entry bookkeeping.
+  # It shares this stack's Kafka so order-service can consume `payment-events` directly,
+  # but keeps its own Postgres 17 — its schema is its own and the marketplace never reads it.
+  ledgerflow:
+    build: ../ledgerflow
+    container_name: ankap-ledgerflow
+    ports:
+      - "8085:8080"
+    environment:
+      - DB_HOST=ledgerflow-postgres
+      - DB_PORT=5432
+      - DB_NAME=ledgerflow
+      - DB_USER=ledgerflow
+      - DB_PASSWORD=ledgerflow
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PSP_BASE_URL=http://mock-psp:9090
+    depends_on:
+      ledgerflow-postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      mock-psp:
+        condition: service_started
+    restart: unless-stopped
+
+  ledgerflow-postgres:
+    image: postgres:17-alpine
+    container_name: ankap-ledgerflow-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ledgerflow
+      POSTGRES_USER: ledgerflow
+      POSTGRES_PASSWORD: ledgerflow
+    volumes:
+      - ledgerflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ledgerflow" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # The fake payment provider LedgerFlow talks to. It declines, errors and times out
+  # on purpose; see LEDGERFLOW.md for how to turn the chaos off.
+  mock-psp:
+    build: ../ledgerflow/mock-psp
+    container_name: ankap-mock-psp
+    ports:
+      - "9091:9090"
+    restart: unless-stopped
+
+  # LedgerFlow's payment.merchant_id is a foreign key, so the marketplace needs a
+  # merchant row before it can create anything. Flyway creates the table at
+  # LedgerFlow startup, so this waits for the table rather than for the container.
+  ledgerflow-merchant-seed:
+    image: postgres:17-alpine
+    container_name: ankap-ledgerflow-seed
+    depends_on:
+      - ledgerflow
+    environment:
+      PGPASSWORD: ledgerflow
+    entrypoint:
+      - sh
+      - -c
+      - |
+        until psql -h ledgerflow-postgres -U ledgerflow -d ledgerflow -c 'select 1 from merchant limit 1' >/dev/null 2>&1; do
+          echo 'waiting for the LedgerFlow schema...'
+          sleep 2
+        done
+        psql -h ledgerflow-postgres -U ledgerflow -d ledgerflow \
+          -c "insert into merchant (id, name) values ('11111111-1111-1111-1111-111111111111', 'Ankap Marketplace') on conflict (id) do nothing;"
+        echo 'merchant seeded'
+    restart: on-failure
 
   # --- INFRASTRUCTURE ---
   # 1. PostgreSQL - Relational Database
@@ -167,3 +248,4 @@ services:
 
 volumes:
   postgres_data:
+  ledgerflow_postgres_data:

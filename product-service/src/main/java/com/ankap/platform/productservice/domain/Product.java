@@ -60,4 +60,11 @@ public class Product {
         }
         this.availableQuantity -= quantity;
     }
+
+    public void restoreInventory(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Cannot restore a negative quantity for product: " + id);
+        }
+        this.availableQuantity += quantity;
+    }
 }

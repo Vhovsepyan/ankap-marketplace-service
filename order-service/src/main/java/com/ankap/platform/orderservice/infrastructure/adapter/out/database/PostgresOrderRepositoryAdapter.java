@@ -20,7 +20,8 @@ public class PostgresOrderRepositoryAdapter implements OrderRepositoryPort {
     public Order save(Order order) {
         OrderEntity entity = new OrderEntity(
                 order.getId(), order.getProductId(), order.getBuyerEmail(),
-                order.getQuantity(), order.getTotalPrice(), order.getStatus(), order.getCreatedAt()
+                order.getQuantity(), order.getTotalPrice(), order.getStatus(), order.getCreatedAt(),
+                order.getPaymentId()
         );
         OrderEntity saved = jpaRepository.save(entity);
         return toDomain(saved);
@@ -34,7 +35,8 @@ public class PostgresOrderRepositoryAdapter implements OrderRepositoryPort {
     private Order toDomain(OrderEntity entity) {
         return new Order(
                 entity.getId(), entity.getProductId(), entity.getBuyerEmail(),
-                entity.getQuantity(), entity.getTotalPrice(), entity.getStatus(), entity.getCreatedAt()
+                entity.getQuantity(), entity.getTotalPrice(), entity.getStatus(), entity.getCreatedAt(),
+                entity.getPaymentId()
         );
     }
 }

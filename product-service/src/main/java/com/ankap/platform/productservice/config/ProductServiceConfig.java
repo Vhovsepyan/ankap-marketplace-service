@@ -1,6 +1,7 @@
 package com.ankap.platform.productservice.config;
 
 import com.ankap.platform.productservice.application.port.in.product.GetProductUseCase;
+import com.ankap.platform.productservice.application.port.in.ReleaseInventoryUseCase;
 import com.ankap.platform.productservice.application.port.in.ReserveInventoryUseCase;
 import com.ankap.platform.productservice.application.port.in.product.DeleteProductUseCase;
 import com.ankap.platform.productservice.application.port.in.product.CreateProductUseCase;
@@ -9,6 +10,7 @@ import com.ankap.platform.productservice.application.port.out.ProductEventPublis
 import com.ankap.platform.productservice.application.port.out.ProductRepositoryPort;
 import com.ankap.platform.productservice.application.service.DeleteProductService;
 import com.ankap.platform.productservice.application.service.GetProductService;
+import com.ankap.platform.productservice.application.service.ReleaseInventoryService;
 import com.ankap.platform.productservice.application.service.ReserveInventoryService;
 import com.ankap.platform.productservice.application.service.CreateProductService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,5 +38,10 @@ public class ProductServiceConfig {
     @Bean
     public ReserveInventoryUseCase reserveInventoryUseCase(ProductRepositoryPort repositoryPort, ProductEventPublisherPort eventPublisherPort, ProductCachePort cachePort) {
         return new ReserveInventoryService(repositoryPort, eventPublisherPort, cachePort);
+    }
+
+    @Bean
+    public ReleaseInventoryUseCase releaseInventoryUseCase(ProductRepositoryPort repositoryPort, ProductCachePort cachePort) {
+        return new ReleaseInventoryService(repositoryPort, cachePort);
     }
 }

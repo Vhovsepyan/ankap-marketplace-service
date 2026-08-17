@@ -17,11 +17,12 @@ public class OrderEntity {
   private BigDecimal totalPrice;
   private String status;
   private Instant createdAt;
+  private UUID paymentId;
 
   // Default constructor for JPA
   public OrderEntity() {}
 
-  public OrderEntity(UUID id, UUID productId, String buyerEmail, Integer quantity, BigDecimal totalPrice, String status, Instant createdAt) {
+  public OrderEntity(UUID id, UUID productId, String buyerEmail, Integer quantity, BigDecimal totalPrice, String status, Instant createdAt, UUID paymentId) {
     this.id = id;
     this.productId = productId;
     this.buyerEmail = buyerEmail;
@@ -29,6 +30,7 @@ public class OrderEntity {
     this.totalPrice = totalPrice;
     this.status = status;
     this.createdAt = createdAt;
+    this.paymentId = paymentId;
   }
 
   public UUID getId() { return id; }
@@ -38,4 +40,5 @@ public class OrderEntity {
   public BigDecimal getTotalPrice() { return totalPrice; }
   public String getStatus() { return status; }
   public Instant getCreatedAt() { return createdAt; }
+  public UUID getPaymentId() { return paymentId; }
 }
