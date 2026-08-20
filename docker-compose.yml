@@ -43,9 +43,11 @@ services:
       - PRODUCT_SERVICE_URL=http://product-service:8082
       - ORDER_SERVICE_URL=http://order-service:8083
       - ANALYTICS_SERVICE_URL=http://analytics-service:8084
+      - LEDGERFLOW_URL=http://ledgerflow:8080
       - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       - zipkin
+      - ledgerflow
     restart: unless-stopped
 
   order-service:

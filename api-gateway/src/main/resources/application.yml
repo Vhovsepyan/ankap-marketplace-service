@@ -30,6 +30,13 @@ spring:
           uri: ${ANALYTICS_SERVICE_URL:http://localhost:8084}
           predicates:
             - Path=/api/analytics/**
+
+        # LedgerFlow owns the money. It has no authentication of its own, so this
+        # route is only appropriate while the gateway is not publicly reachable.
+        - id: ledgerflow
+          uri: ${LEDGERFLOW_URL:http://localhost:8085}
+          predicates:
+            - Path=/v1/payments,/v1/payments/**
         - id: auth-service-docs
           uri: ${AUTH_SERVICE_URL:http://localhost:8081}
           predicates:
